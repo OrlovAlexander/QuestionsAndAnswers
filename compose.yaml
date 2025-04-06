@@ -1,0 +1,6 @@
+﻿services:
+  questionsandanswers:
+    image: questionsandanswers
+    build:
+      context: .
+      dockerfile: QuestionsAndAnswers/Dockerfile
