@@ -1,0 +1,90 @@
+﻿@page "/add-question"
+@rendermode InteractiveServer
+
+@using TinyMCE.Blazor;
+
+<PageTitle>AddQuestion</PageTitle>
+
+<h2>Добавить вопрос</h2>
+
+<div class="dropdown">
+    <a type="button" class="btn btn-primary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Добавить вопрос по:
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" onclick=@(() => ShowQuestionBox("C#"))>C#</a></li>
+        <li><a class="dropdown-item" onclick=@(() => ShowQuestionBox(".NET"))>.NET</a></li>
+        <li><a class="dropdown-item" onclick=@(() => ShowQuestionBox("SQL"))>SQL</a></li>
+        <li><a class="dropdown-item" onclick=@(() => ShowQuestionBox("EF"))>EF</a></li>
+    </ul>
+    <span class="ms-3" id="question-discipline" style="@(IsShowQuestionDiscipline ? "" : "display:none")">
+        <b class="text-primary">@Discipline</b>
+    </span>
+</div>
+
+@if (IsShowQuestionText)
+{
+    <div class="container my-4">
+        <Editor
+            Id="question-text"
+            JsConfSrc="tinymcejsconfig"
+            @bind-Value=question_text_content
+        />
+        <textarea hidden @bind=question_text_content @bind:event="oninput"></textarea>
+    </div>
+}
+
+@if (IsShowAnswerText)
+{
+    <div class="container">
+        <p id="answer-label">Ответ на вопрос:</p>
+        <div>
+            <Editor
+                Id="answer-text"
+                JsConfSrc="tinymcejsconfig"
+                @bind-Value=answer_text_content
+            />
+        </div>
+        <textarea hidden @bind=answer_text_content @bind:event="oninput"></textarea>
+        <div class="my-4">
+            <span>
+                <button class="btn btn-success" onclick=@(() => Save())>Сохранить</button>
+                <button class="btn btn-danger ms-4" href="#">Отменить</button>
+            </span>
+        </div>
+    </div>
+}
+
+@code{
+    private string question_text_content;
+    private string answer_text_content;
+
+    private bool IsShowQuestionText { get; set; }
+    private bool IsShowAnswerText { get; set; }
+    private bool IsShowQuestionDiscipline { get; set; }
+
+    private string Discipline { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsShowQuestionText = false;
+        IsShowAnswerText = false;
+        IsShowQuestionDiscipline = false;
+    }
+
+    private void ShowQuestionBox(string discipline)
+    {
+        Discipline = discipline;
+        IsShowQuestionDiscipline = true;
+
+        IsShowQuestionText = true;
+        IsShowAnswerText = true;
+    }
+
+    private void Save()
+    {
+        Console.WriteLine(question_text_content);
+    }
+}
+
+
